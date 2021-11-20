@@ -1,12 +1,12 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 	"strings"
+
+	"github.com/AntonKosov/advent-of-code-2020/aoc"
 )
 
 type password struct {
@@ -37,24 +37,22 @@ func process(data []password) int {
 
 func read() ([]password, error) {
 	result := []password{}
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		line := scanner.Text()
+	handler := func(line string) error {
 		parts := strings.Split(line, " ")
 		if len(parts) != 3 {
-			return nil, fmt.Errorf("wrong format")
+			return fmt.Errorf("wrong format")
 		}
 		count := strings.Split(parts[0], "-")
 		if len(count) != 2 {
-			return nil, fmt.Errorf("wrong format")
+			return fmt.Errorf("wrong format")
 		}
 		pos1, err := strconv.Atoi(count[0])
 		if err != nil {
-			return nil, err
+			return err
 		}
 		pos2, err := strconv.Atoi(count[1])
 		if err != nil {
-			return nil, err
+			return err
 		}
 		result = append(result, password{
 			pos1: pos1,
@@ -62,8 +60,9 @@ func read() ([]password, error) {
 			char: parts[1][0],
 			psw:  parts[2],
 		})
+		return nil
 	}
-	if err := scanner.Err(); err != nil {
+	if err := aoc.ReadInput(handler); err != nil {
 		return nil, err
 	}
 	return result, nil

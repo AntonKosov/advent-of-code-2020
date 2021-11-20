@@ -11,8 +11,17 @@
             "mode": "auto",
             "program": "${file}",
             "args": [
-                "<",
                 "${fileDirname}/example.txt"
+            ]
+        },
+        {
+            "name": "Input",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${file}",
+            "args": [
+                "${fileDirname}/input.txt"
             ]
         }
     ]
