@@ -17,7 +17,9 @@ func StrToInts(s string, sep string) []int {
 	var result []int
 	parts := strings.Split(s, sep)
 	for _, p := range parts {
-		result = append(result, StrToInt(p))
+		if p != "" {
+			result = append(result, StrToInt(p))
+		}
 	}
 	return result
 }
