@@ -6,6 +6,10 @@ type Vector2 struct {
 	X, Y int
 }
 
+func NewVector2(x, y int) Vector2 {
+	return Vector2{X: x, Y: y}
+}
+
 func (v Vector2) RotateLeft() Vector2 {
 	rm := [2][2]int{
 		{0, -1},
