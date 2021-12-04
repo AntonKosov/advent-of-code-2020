@@ -1,6 +1,6 @@
 package aoc
 
-// Vector2 represents a two-dimentional vector in left-handed Cartesian
+// Vector2 represents a two-dimensional vector in left-handed Cartesian
 // coordinate system
 type Vector2 struct {
 	X, Y int
