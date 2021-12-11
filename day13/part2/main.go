@@ -2,54 +2,69 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"runtime"
-	"strconv"
 	"strings"
-	"sync"
 
 	"github.com/AntonKosov/advent-of-code-2020/aoc"
 )
 
 type bus struct {
-	id     int64
-	offset int64
+	id     int
+	offset int
 }
 
 func main() {
-	data, err := read()
-	if err != nil {
-		log.Fatalf("Error reading data: %v", err.Error())
-	}
+	data := read()
 	r := process(data)
 	fmt.Printf("Answer: %v\n", r)
 }
 
-func read() ([]bus, error) {
-	result := make([]bus, 0)
-	handler := func(line string) error {
-		buses := strings.Split(line, ",")
-		for i, b := range buses {
-			if b == "x" {
-				continue
-			}
-			id, err := strconv.Atoi(b)
-			if err != nil {
-				return err
-			}
-			result = append(result, bus{
-				id:     int64(id),
-				offset: int64(i),
-			})
+func read() (data []bus) {
+	lines := aoc.ReadAllInput()
+	buses := strings.Split(lines[0], ",")
+	for i, b := range buses {
+		if b == "x" {
+			continue
 		}
-		return nil
+		id := aoc.StrToInt(b)
+		data = append(data, bus{id: id, offset: i})
 	}
-	if err := aoc.ReadInput(handler); err != nil {
-		return nil, err
-	}
-	return result, nil
+	return data
 }
 
+type row struct {
+	rem int
+	mod int
+}
+
+// Chinese Reminder Theorem is used
+func process(data []bus) int {
+	var rows []row
+	mb := 1
+	for _, b := range data {
+		rem := 0
+		if b.offset > 0 {
+			rem = b.id - b.offset
+		}
+		rows = append(rows, row{rem: rem, mod: b.id})
+		mb *= b.id
+	}
+
+	sum := 0
+	for _, r := range rows {
+		base := mb / r.mod
+		for i := 1; ; i++ {
+			if (base*i)%r.mod == 1 {
+				sum += r.rem * base * i
+				break
+			}
+		}
+	}
+
+	return sum % mb
+}
+
+/*
+// brute force :(
 func process(data []bus) int64 {
 	maxId := 0
 	for i, b := range data {
@@ -83,7 +98,6 @@ func process(data []bus) int64 {
 	}()
 	var m int64
 loop:
-	// brute force :(
 	for m = 1; ; m += chunkSize {
 		select {
 		case <-stopSignal:
@@ -125,3 +139,4 @@ loop:
 	}
 	return min
 }
+*/
